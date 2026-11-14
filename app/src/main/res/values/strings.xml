@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DroidOS Neo</string>
+    <string name="accessibility_service_description">DroidOS Neo allows AI agents to control your Android device via MCP over HTTP. It reads the screen hierarchy and performs gestures on behalf of agents.</string>
+</resources>

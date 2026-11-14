@@ -1,0 +1,11 @@
+name = "droidos-mcp"
+main = "cloudshell-mcp-worker.js"
+compatibility_date = "2024-11-05"
+
+[[durable_objects.bindings]]
+name = "DEVICE_BRIDGE"
+class_name = "DeviceBridge"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["DeviceBridge"]
