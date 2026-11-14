@@ -21,12 +21,14 @@ import javax.net.ssl.HttpsURLConnection
  */
 class McpCloudflareClient(
     private val context: Context,
-    private val workerBase: String = "https://YOUR-DROIDOS-WORKER.workers.dev",
+    private var workerBase: String = DEFAULT_WORKER_URL,
     private val autoReconnect: Boolean = true
 ) {
     companion object {
         const val PREF_NAME = "droidos_prefs"
         const val PREF_CF_ENABLED = "cloudflare_mode_enabled"
+        const val PREF_WORKER_URL = "cloudflare_worker_url"
+        const val DEFAULT_WORKER_URL = "https://YOUR-DROIDOS-WORKER.workers.dev"
     }
 
     @Volatile var connected: Boolean = false
@@ -40,7 +42,24 @@ class McpCloudflareClient(
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     }
 
+    init {
+        val saved = prefs.getString(PREF_WORKER_URL, null)
+        if (!saved.isNullOrBlank()) {
+            workerBase = saved.trim().trimEnd('/')
+        }
+    }
+
     fun setOnLogMessage(cb: (String) -> Unit) { onLogMessage = cb }
+
+    fun getSavedWorkerUrl(): String = prefs.getString(PREF_WORKER_URL, "") ?: ""
+
+    fun setWorkerUrl(url: String) {
+        val cleaned = url.trim().trimEnd('/')
+        if (cleaned.isNotBlank()) {
+            workerBase = cleaned
+            prefs.edit().putString(PREF_WORKER_URL, cleaned).apply()
+        }
+    }
 
     /** Starts the Cloudflare polling loop and persists the enabled state. */
     fun start() {

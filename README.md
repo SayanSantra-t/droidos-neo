@@ -22,11 +22,13 @@ Copy your deployed Worker URL (e.g. `https://droidos-mcp.<your-subdomain>.worker
 
 > Note: `wrangler.toml` uses `new_sqlite_classes = ["DeviceBridge"]`, which is supported on the Cloudflare Workers Free plan.
 
-### 2. Configure & Build the Android App
+### 2. Build & Run the Android App
 
-1. Open `app/src/main/java/com/droidos/neo/McpCloudflareClient.kt` and replace `https://YOUR-DROIDOS-WORKER.workers.dev` with your deployed Worker URL.
-2. Open the project in Android Studio (or run `./gradlew assembleDebug`) and install the APK on your phone.
-3. Open **DroidOS Neo**, grant **Accessibility Service** permission, and toggle **Direct Cloudflare Mode** ON.
+1. Open the project in Android Studio (or run `./gradlew assembleDebug`) and install the APK on your phone.
+2. Open **DroidOS Neo** on your phone:
+   - Grant **Accessibility Service** permission when prompted.
+   - Enter your deployed Cloudflare Worker URL (e.g. `https://droidos-mcp.<your-subdomain>.workers.dev`) in the Worker URL field.
+   - Toggle **Direct Cloudflare Mode** ON. State and URL are automatically saved.
 
 ### 3. Connect to Gemini
 

@@ -44,7 +44,16 @@
             android:textIsSelectable="true"
             android:layout_marginBottom="16dp" />
 
-        <!-- Cloudflare Direct Mode toggle -->
+        <!-- Cloudflare Direct Mode URL & toggle -->
+        <EditText
+            android:id="@+id/etWorkerUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="https://YOUR-DROIDOS-WORKER.workers.dev"
+            android:inputType="textUri"
+            android:singleLine="true"
+            android:layout_marginBottom="8dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,7 +97,8 @@
             android:text=""
             android:textSize="12sp"
             android:fontFamily="monospace"
-            android:background="#F5F5F5"
+            android:background="#121212"
+            android:textColor="#00FF66"
             android:padding="8dp" />
 
     </LinearLayout>

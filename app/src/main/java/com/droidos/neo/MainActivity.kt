@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.accessibility.AccessibilityManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvAccessibilityStatus: TextView
     private lateinit var tvEndpointUrl: TextView
     private lateinit var tvLogs: TextView
+    private lateinit var etWorkerUrl: EditText
     private lateinit var switchCloudflare: Switch
     private lateinit var tvCloudflareStatus: TextView
 
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         tvAccessibilityStatus  = findViewById(R.id.tvAccessibilityStatus)
         tvEndpointUrl          = findViewById(R.id.tvEndpointUrl)
         tvLogs                 = findViewById(R.id.tvLogs)
+        etWorkerUrl            = findViewById(R.id.etWorkerUrl)
         switchCloudflare       = findViewById(R.id.switchCloudflare)
         tvCloudflareStatus     = findViewById(R.id.tvCloudflareStatus)
 
@@ -54,19 +58,35 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Restore saved Worker URL if present
+        val savedUrl = cfClient!!.getSavedWorkerUrl()
+        if (savedUrl.isNotBlank()) {
+            etWorkerUrl.setText(savedUrl)
+        }
+
         // Restore persisted switch state (default OFF)
         val savedCfEnabled = cfClient!!.isModeEnabled()
         switchCloudflare.isChecked = savedCfEnabled
+        etWorkerUrl.isEnabled = !savedCfEnabled
         updateCloudflareStatus(savedCfEnabled)
         if (savedCfEnabled) cfClient?.start()
 
         // Toggle handler
         switchCloudflare.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
+                val enteredUrl = etWorkerUrl.text.toString().trim().trimEnd('/')
+                if (enteredUrl.isBlank() || enteredUrl == McpCloudflareClient.DEFAULT_WORKER_URL) {
+                    Toast.makeText(this, "Enter your Cloudflare Worker URL first", Toast.LENGTH_SHORT).show()
+                    switchCloudflare.isChecked = false
+                    return@setOnCheckedChangeListener
+                }
+                cfClient?.setWorkerUrl(enteredUrl)
                 cfClient?.start()
+                etWorkerUrl.isEnabled = false
                 updateCloudflareStatus(true)
             } else {
                 cfClient?.stop()
+                etWorkerUrl.isEnabled = true
                 updateCloudflareStatus(false)
             }
         }
